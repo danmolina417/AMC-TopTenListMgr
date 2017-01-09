@@ -1,0 +1,212 @@
+<div class="panel panel-primary" ng-controller="SongListCtrl">
+
+    <div class="btn-group menu" ng-click="showAddSongForm = false;">
+        <a href="#" ng-click="curView='Songs Search'" class="button">Songs List<a/>
+        <a href="#" ng-click="curView='Top Ten Lists'" class="button">View Top Ten List<a/>
+    </div>
+
+
+    <div class="panel-heading">
+       <h1>{{curView}}</h1>
+    </div>
+
+    <div ng-show="curView==='Songs Search'" class="panel-body" ng-click="showAddSongForm = false;">
+        <!--<button ng-click="login()">Login with Spotify</button>-->
+        <input type="text" ng-model="searchartist" ng-change="searchArtist()" placeholder="Search for an artist">
+    </div> 
+        
+    <div class="panel-body">
+
+        <!-- Artists -->    
+        <div ng-show="curView==='Songs Search' && artists.length > 0" class="artistList" ng-click="showAddSongForm = false;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Artist</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="artist in artists">
+                        <td>
+                            <a class="media" ng-href="{{artist.external_urls.spotify}}" target="_blank">
+                                <img class="media" ng-src="{{artist.images[0].url}}" alt="">
+                            </a></td>
+                        <td>{{artist.name}}</td>
+                        <td><a href="#" ng-click="getAlbums(artist.id)" class="button">view albums</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Albums -->    
+        <div ng-show="curView==='Songs Search' && albums.length > 0" class="albumList" ng-click="showAddSongForm = false;">
+            <h3>Albums</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Album</td>
+                        <td>Tracks</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="album in albums">
+                        <td>{{album.name}}</td>
+                        <td><a href="#" ng-click="getTracks(album)" class="button">tracks</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tracks -->    
+        <div ng-show="curView==='Songs Search' && tracks.items.length > 0" class="trackList">
+            <h3>Tracks</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Track</td>
+                        <td>Add</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="track in tracks.items">
+                        <td>{{track.name}}</td>
+                        <td><a href="#" ng-click="showAddForm(track)" class="button">+</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Top Ten Lists -->
+        <div ng-show="curView==='Top Ten Lists'">
+            <input type="text" placeholder="Enter New Top Ten List" size="40" ng-model="newTopTenList">
+            <a href="#" ng-click="createNewTopTenList()">Add New List</a>
+            <br><br><br>
+            <table ng-show="topTenLists.length > 0" class="table">
+                <thead>
+                    <tr>
+                        <td style="background-color:cornflowerblue">Top Ten List</td>
+                        <td style="background-color:cornflowerblue">Song Count</td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="ttlist in topTenLists">
+                    <tr>
+                        <td style="background-color:beige">{{ ttlist.title }}</td>
+                        <td style="background-color:beige">{{ ttlist.songs.length }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan=3>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Song</td>
+                                        <td>Artist</td>
+                                        <td>Album</td>
+                                        <td>Note</td>
+                                        <td>Del</td>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="song in ttlist.songs">
+                                    <tr>
+                                        <td>{{ song.title }}</td>
+                                        <td>{{ song.artist }}</td>
+                                        <td>{{ song.album }}</td>
+                                        <td>{{ song.note }}</td>
+                                        <td><a href="#" ng-click="removeSongFromTopTenList(ttlist, song)">-</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- Single Top Ten List -->
+        <div ng-show="curView==='Single Top Ten List'">
+
+            <h4>{{selectedTopTenList.title}}</h4>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Song</td>
+                        <td>Note</td>
+                        <td>Del</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="song in selectedTopTenList.songs">
+                        <td>{{ song.title }}</td>
+                        <td>{{ song.note }}</td>
+                        <td><a href="#" ng-click="removeSong(song)">-</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Add Song to Top Ten List Form -->    
+    <div ng-show="showAddSongForm" id="addSongForm">
+        <div style="float:right; color:blue; border: blue;"><a href="#" ng-click="showAddSongForm=false">X</a></div>
+        <h3>Add Song</h3>
+        <div style"width:350px;">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>List</td>
+                        <td>
+                            <div ng-show="!topTenLists">You do not have any Top Ten Lists</div>
+                                <select ng-options="item.title for item in topTenLists" placeholder="Select Top Ten List" ng-model="selectedTopTenList"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Track</td>
+                        <td>{{selectedTrack.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Note</td>
+                        <td><input type="text" placeholder="Add Note" size="40" ng-model="songNote"></td>
+                    </tr>
+                    <tr>
+                        <td colspan=2><a href="#" ng-show="selectedTopTenList" ng-click="addSongToTopTenList()" class="button">add song to {{selectedTopTenList.title}} </a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style"width: 750px;">
+            <table ng-show="selectedTopTenList" class="table">
+                <tbody>
+                    <tr>
+                        <td colspan="5">{{selectedTopTenList.title}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Song</td>
+                        <td>Artist</td>
+                        <td>Album</td>
+                        <td>Note</td>
+                    </tr>
+                    <tr ng-repeat="song in selectedTopTenList.songs">
+                        <td><img class="media" ng-src="{{song.customImage}}" border=0></td>
+                        <td>{{song.track}}</td>
+                        <td>{{song.artist}}</td>
+                        <td>{{song.album}}</td>
+                        <td>{{song.note}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+    </div>
+
+</div>
+
+
+

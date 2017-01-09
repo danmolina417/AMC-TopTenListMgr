@@ -1,0 +1,89 @@
+
+ul {
+      list-style: none;
+}
+.logo {
+  max-width: 200px;
+}
+.appTitle {
+  max-width: 200px;
+  float: left;
+}
+.media {
+  display: table;
+  width: 100%;
+}
+.media img {
+  display: table-cell;
+  max-width: 45px;
+  width: 45px;
+}
+.media-details {
+  padding-left: 1em;
+  vertical-align: middle;
+  display: table-cell;
+  width: 90%;
+}
+.artistList {
+  display: block;
+  max-width: 500px;
+  width: 40%;
+  max-height: 500px;
+  overflow: auto;
+  float: left;
+}
+.albumList {
+  display: block;
+  max-width: 500px;
+  width: 30%;
+  max-height: 500px;
+  overflow: auto;
+  float: left;
+}
+.trackList {
+  display: block;
+  max-width: 500px;
+  width: 30%;
+  max-height: 500px;
+  overflow: auto;
+  float: left;
+}
+#addSongForm {
+	position: fixed;
+	z-index: 9999999;
+	width: 800px;
+	height: 450px;
+	text-align: center;
+	top: calc(50% - 225px);
+  left: calc(50% - 400px);
+  padding-left: calc(100%-50% - 50px);
+  background-color: #ccc;
+  overflow: auto;
+}
+#addSongForm img {
+  width: 45px;
+  max-width:45px;
+}
+.btn-group.menu {
+  padding: 10px;
+}
+.button {
+    color: white;
+    display: inline-block;
+    line-height: 28px;
+    background-color: #ccc;
+    text-align: center;
+    text-decoration: none;
+    font-size: 10pt;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.button a:hover {
+    color: white;
+}
+.button.accept {
+    background-color: #65BA7B;
+}
+.button.inactive {
+    background-color: #E0E1DF;
+}
